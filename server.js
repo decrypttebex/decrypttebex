@@ -11,40 +11,40 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Na Vercel, a pasta do projeto é somente leitura.
-// Por isso usamos /tmp para salvar dados temporários.
+// Por isso salvamos dados temporários em /tmp.
 const DADOS_FILE = process.env.VERCEL
   ? path.join("/tmp", "dados.json")
   : path.join(__dirname, "dados.json");
 
 const DADOS_ORIGINAL = path.join(__dirname, "dados.json");
 
-// Configurações do Discord OAuth2
+// Discord OAuth2
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
 const DISCORD_REDIRECT_URI =
   process.env.DISCORD_REDIRECT_URI ||
   `http://localhost:${PORT}/api/auth/discord/callback`;
 
-console.log("=== Variáveis de Ambiente Carregadas ===");
+console.log("=== Variáveis de Ambiente ===");
 console.log("DISCORD_CLIENT_ID:", DISCORD_CLIENT_ID || "NÃO CONFIGURADO");
 console.log("DISCORD_CLIENT_SECRET:", DISCORD_CLIENT_SECRET ? "CONFIGURADO" : "NÃO CONFIGURADO");
 console.log("DISCORD_REDIRECT_URI:", DISCORD_REDIRECT_URI);
 console.log("DADOS_FILE:", DADOS_FILE);
-console.log("========================================");
+console.log("=============================");
 
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Servir frontend
+// Servir arquivos da pasta public
 app.use(express.static(path.join(__dirname, "public")));
 
-// Inicializar banco de dados
 async function initDB() {
   try {
     await fs.access(DADOS_FILE);
-    console.log("✅ Banco de dados encontrado:", DADOS_FILE);
+    console.log("✅ dados.json encontrado:", DADOS_FILE);
   } catch (err) {
-    console.log("⚠️ Banco de dados não encontrado, criando...");
+    console.log("⚠️ dados.json não encontrado, criando...");
 
     let dadosPadrao = {
       conteudos: [],
@@ -52,21 +52,19 @@ async function initDB() {
       usuarios: []
     };
 
-    // Se existir dados.json original no projeto, copia ele para /tmp na Vercel
     try {
       const dadosExistente = await fs.readFile(DADOS_ORIGINAL, "utf8");
       dadosPadrao = JSON.parse(dadosExistente);
       console.log("✅ dados.json original carregado");
     } catch (e) {
-      console.log("⚠️ Nenhum dados.json original encontrado, usando padrão");
+      console.log("⚠️ usando dados padrão");
     }
 
     await fs.writeFile(DADOS_FILE, JSON.stringify(dadosPadrao, null, 2), "utf8");
-    console.log("✅ Banco de dados criado em:", DADOS_FILE);
+    console.log("✅ dados.json criado em:", DADOS_FILE);
   }
 }
 
-// Ler dados
 async function lerDados() {
   try {
     await initDB();
@@ -74,6 +72,7 @@ async function lerDados() {
     return JSON.parse(dados);
   } catch (err) {
     console.error("❌ Erro ao ler dados:", err.message);
+
     return {
       conteudos: [],
       downloads: [],
@@ -82,11 +81,9 @@ async function lerDados() {
   }
 }
 
-// Escrever dados
 async function escreverDados(dados) {
   try {
     await fs.writeFile(DADOS_FILE, JSON.stringify(dados, null, 2), "utf8");
-    return true;
   } catch (err) {
     console.error("❌ Erro ao escrever dados:", err.message);
     throw err;
@@ -98,7 +95,7 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Status da API
+// Status para teste
 app.get("/api/status", async (req, res) => {
   res.json({
     online: true,
@@ -110,7 +107,7 @@ app.get("/api/status", async (req, res) => {
   });
 });
 
-// Listar conteúdos
+// Conteúdos
 app.get("/api/conteudos", async (req, res) => {
   try {
     const dados = await lerDados();
@@ -129,7 +126,6 @@ app.get("/api/conteudos", async (req, res) => {
   }
 });
 
-// Adicionar conteúdo
 app.post("/api/conteudos", async (req, res) => {
   try {
     const dados = await lerDados();
@@ -157,8 +153,6 @@ app.post("/api/conteudos", async (req, res) => {
 // Iniciar login Discord
 app.get("/api/auth/discord", (req, res) => {
   console.log("=== /api/auth/discord chamado ===");
-  console.log("DISCORD_CLIENT_ID:", DISCORD_CLIENT_ID);
-  console.log("DISCORD_REDIRECT_URI:", DISCORD_REDIRECT_URI);
 
   if (!DISCORD_CLIENT_ID) {
     return res.status(500).json({
@@ -181,11 +175,10 @@ app.get("/api/auth/discord", (req, res) => {
   authUrl.searchParams.set("response_type", "code");
   authUrl.searchParams.set("scope", scope);
   authUrl.searchParams.set("state", state);
-  authUrl.searchParams.set("prompt", "none");
 
   const url = authUrl.toString();
 
-  console.log("URL gerada:", url);
+  console.log("URL Discord gerada:", url);
 
   res.json({ url, state });
 });
@@ -193,9 +186,7 @@ app.get("/api/auth/discord", (req, res) => {
 // Callback Discord
 app.get("/api/auth/discord/callback", async (req, res) => {
   console.log("=== Callback do Discord chamado ===");
-  console.log("Query params:", req.query);
-  console.log("DISCORD_CLIENT_ID:", DISCORD_CLIENT_ID);
-  console.log("DISCORD_REDIRECT_URI:", DISCORD_REDIRECT_URI);
+  console.log("Query:", req.query);
 
   try {
     const { code } = req.query;
@@ -211,8 +202,7 @@ app.get("/api/auth/discord/callback", async (req, res) => {
     }
 
     console.log("✅ Código recebido:", code);
-
-    console.log("🔄 Solicitando token do Discord...");
+    console.log("🔄 Solicitando token...");
 
     const tokenResponse = await axios.post(
       "https://discord.com/api/oauth2/token",
@@ -230,11 +220,11 @@ app.get("/api/auth/discord/callback", async (req, res) => {
       }
     );
 
-    console.log("✅ Token recebido!");
+    console.log("✅ Token recebido");
 
     const { access_token, refresh_token, expires_in } = tokenResponse.data;
 
-    console.log("🔄 Buscando dados do usuário...");
+    console.log("🔄 Buscando usuário...");
 
     const userResponse = await axios.get("https://discord.com/api/users/@me", {
       headers: {
@@ -244,7 +234,7 @@ app.get("/api/auth/discord/callback", async (req, res) => {
 
     const discordUser = userResponse.data;
 
-    console.log("✅ Dados do usuário:", discordUser.username);
+    console.log("✅ Usuário Discord:", discordUser.username);
 
     const dados = await lerDados();
 
@@ -278,7 +268,7 @@ app.get("/api/auth/discord/callback", async (req, res) => {
       dados.usuarios.push(usuario);
       await escreverDados(dados);
 
-      console.log("✅ Novo usuário criado");
+      console.log("✅ Novo usuário salvo");
     } else {
       usuario.username = discordUser.global_name || discordUser.username;
       usuario.usuarioDiscord = discordUser.username;
@@ -293,7 +283,7 @@ app.get("/api/auth/discord/callback", async (req, res) => {
 
       await escreverDados(dados);
 
-      console.log("✅ Usuário atualizado com novo token");
+      console.log("✅ Usuário atualizado");
     }
 
     const usuarioSeguro = {
@@ -309,11 +299,11 @@ app.get("/api/auth/discord/callback", async (req, res) => {
       ultimoLogin: usuario.ultimoLogin
     };
 
-    console.log("🔄 Redirecionando para o frontend...");
+    console.log("✅ Login finalizado, redirecionando...");
 
     res.redirect(`/?usuario=${encodeURIComponent(JSON.stringify(usuarioSeguro))}`);
   } catch (err) {
-    console.error("❌ Erro na autenticação OAuth2:");
+    console.error("❌ Erro OAuth2:");
     console.error("Mensagem:", err.message);
 
     if (err.response) {
@@ -333,31 +323,31 @@ app.get("/api/verificar-usuario/:discordId", async (req, res) => {
 
     const usuario = (dados.usuarios || []).find((u) => u.discordId === discordId);
 
-    if (usuario) {
-      const usuarioSeguro = {
-        id: usuario.id,
-        discordId: usuario.discordId,
-        username: usuario.username,
-        usuarioDiscord: usuario.usuarioDiscord,
-        discriminator: usuario.discriminator,
-        email: usuario.email,
-        avatar: usuario.avatar,
-        avatarUrl: usuario.avatarUrl,
-        dataVinculacao: usuario.dataVinculacao,
-        ultimoLogin: usuario.ultimoLogin
-      };
-
-      res.json({ vinculado: true, usuario: usuarioSeguro });
-    } else {
-      res.json({ vinculado: false });
+    if (!usuario) {
+      return res.json({ vinculado: false });
     }
+
+    const usuarioSeguro = {
+      id: usuario.id,
+      discordId: usuario.discordId,
+      username: usuario.username,
+      usuarioDiscord: usuario.usuarioDiscord,
+      discriminator: usuario.discriminator,
+      email: usuario.email,
+      avatar: usuario.avatar,
+      avatarUrl: usuario.avatarUrl,
+      dataVinculacao: usuario.dataVinculacao,
+      ultimoLogin: usuario.ultimoLogin
+    };
+
+    res.json({ vinculado: true, usuario: usuarioSeguro });
   } catch (err) {
     console.error("Erro ao verificar usuário:", err.message);
     res.status(500).json({ erro: "Erro ao verificar usuário" });
   }
 });
 
-// Buscar downloads
+// Downloads
 app.get("/api/downloads", async (req, res) => {
   try {
     const dados = await lerDados();
@@ -368,22 +358,24 @@ app.get("/api/downloads", async (req, res) => {
   }
 });
 
-// Rota fallback para frontend
-app.get("*", (req, res) => {
+// Fallback corrigido para evitar erro 500 na Vercel
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // Inicializar DB
-initDB().then(() => {
-  console.log("✅ Banco inicializado");
+initDB()
+  .then(() => {
+    console.log("✅ Banco inicializado");
 
-  // Na Vercel, exportamos o app.
-  // Localmente, iniciamos com app.listen.
-  if (!process.env.VERCEL) {
-    app.listen(PORT, () => {
-      console.log(`✅ Servidor FiveM rodando em http://localhost:${PORT}`);
-    });
-  }
-});
+    if (!process.env.VERCEL) {
+      app.listen(PORT, () => {
+        console.log(`✅ Servidor rodando em http://localhost:${PORT}`);
+      });
+    }
+  })
+  .catch((err) => {
+    console.error("❌ Erro ao inicializar banco:", err.message);
+  });
 
 module.exports = app;
