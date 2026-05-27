@@ -1,0 +1,24 @@
+{
+  "conteudos": [],
+  "downloads": [],
+  "usuarios": [
+    {
+      "id": 1779793680532,
+      "discordId": "1427636909001281689",
+      "username": "baianex22#0",
+      "avatar": "a_1ce74a628a7fe2f52d05e47d1a8928ae",
+      "dataVinculacao": "2026-05-26T11:08:00.532Z"
+    },
+    {
+      "id": 1779802606698,
+      "discordId": "1501725487641137334",
+      "username": "bruno028276#0",
+      "email": "fivembinbin.0001@gmail.com",
+      "avatar": "d4537ac912e5032fd3d2f897da05dd6e",
+      "accessToken": "MTUwNzk5ODc4NDI2MzY4ODI0Mg.YXPNQEMoIA5vlmmM8VcTa1AkCunoGa",
+      "refreshToken": "b9l6TAnGVpOckZjBDRqU50WpDDsZmD",
+      "tokenExpiresAt": "2026-06-02T13:36:46.698Z",
+      "dataVinculacao": "2026-05-26T13:36:46.698Z"
+    }
+  ]
+}
