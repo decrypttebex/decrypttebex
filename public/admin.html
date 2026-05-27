@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - DECRYPT TEBEX</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --accent: #ff3366;
+            --accent-light: #ff4d7f;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6b6b80;
+            --border: rgba(255,255,255,0.08);
+            --success: #00c853;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        body {
+            font-family: var(--font);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 40px 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .admin-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 48px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .admin-title {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .btn-voltar {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-voltar:hover {
+            background: var(--bg-primary);
+            border-color: rgba(255,255,255,0.15);
+        }
+
+        .sucesso {
+            background: rgba(0,200,83,0.1);
+            border: 1px solid rgba(0,200,83,0.3);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 32px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            color: var(--success);
+        }
+
+        .form-section {
+            margin-bottom: 32px;
+        }
+
+        .form-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 12px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: var(--font);
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(255,51,102,0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font);
+        }
+
+        .btn-submit:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255,51,102,0.3);
+        }
+
+        .conteudos-list {
+            margin-top: 48px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+
+        .conteudos-list-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .conteudo-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .conteudo-item:hover {
+            border-color: rgba(255,255,255,0.15);
+        }
+
+        .conteudo-item-info {
+            flex: 1;
+        }
+
+        .conteudo-item-nome {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .conteudo-item-categoria {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: capitalize;
+        }
+
+        .conteudo-item a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 24px 0;
+            }
+
+            .admin-card {
+                padding: 32px 24px;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="login-container">
+        <div class="admin-card" style="max-width: 400px; margin: 80px auto; text-align: center;">
+            <h1 class="admin-title" style="margin-bottom: 24px;">Painel de Administração</h1>
+            <div class="form-group">
+                <label for="senha-admin">Digite a Senha</label>
+                <input type="password" id="senha-admin" placeholder="••••••••">
+            </div>
+            <button id="btn-entrar" class="btn-submit">Entrar</button>
+            <p id="erro-senha" style="color: var(--accent); margin-top: 16px; font-size: 14px; display: none;">Senha incorreta!</p>
+        </div>
+    </div>
+
+    <div class="container" id="admin-container" style="display: none;">
+        <div class="admin-card">
+            <div class="admin-header">
+                <h1 class="admin-title">Painel de Administração</h1>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <button id="btn-sair" class="btn-voltar" style="padding: 8px 16px; font-size: 13px;">Sair</button>
+                    <a href="index.html" class="btn-voltar">← Voltar ao Site</a>
+                </div>
+            </div>
+
+            <div id="mensagem-sucesso" class="sucesso">
+                <span>✅</span>
+                Conteúdo adicionado com sucesso!
+            </div>
+
+            <form id="form-conteudo">
+                <div class="form-section">
+                    <h3 class="form-section-title">Informações Básicas</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="categoria">Categoria</label>
+                            <select id="categoria" required>
+                                <option value="">Selecione</option>
+                                <option value="mapas">Mapas</option>
+                                <option value="scripts">Scripts</option>
+                                <option value="mods">Mods</option>
+                                <option value="carros">Carros</option>
+                                <option value="roupas">Roupas</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="nome">Nome do Conteúdo</label>
+                            <input type="text" id="nome" required placeholder="Ex: Mapa de Los Santos">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="form-section-title">Descrição e Links</h3>
+                    <div class="form-group full-width">
+                        <label for="descricao">Descrição</label>
+                        <textarea id="descricao" required placeholder="Descreva o conteúdo..."></textarea>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="downloadUrl">Link de Download</label>
+                            <input type="url" id="downloadUrl" required placeholder="https://exemplo.com/download.zip">
+                        </div>
+                        <div class="form-group">
+                            <label for="imagem">Link da Imagem (opcional)</label>
+                            <input type="url" id="imagem" placeholder="https://exemplo.com/imagem.jpg">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Adicionar Conteúdo</button>
+            </form>
+
+            <div class="conteudos-list">
+                <h3 class="conteudos-list-title">Conteúdos Adicionados</h3>
+                <div id="conteudos-adicionados"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Senha do admin (mude para sua senha!)
+        const SENHA_ADMIN = '@DecryptTebex21051712';
+
+        function verificarAutenticacao() {
+            return localStorage.getItem('adminAutenticado') === 'true';
+        }
+
+        function mostrarLogin() {
+            document.getElementById('login-container').style.display = 'block';
+            document.getElementById('admin-container').style.display = 'none';
+        }
+
+        function mostrarPainel() {
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('admin-container').style.display = 'block';
+            carregarConteudosAdicionados();
+        }
+
+        // Evento de login
+        document.getElementById('btn-entrar').addEventListener('click', () => {
+            const senhaDigitada = document.getElementById('senha-admin').value;
+            if (senhaDigitada === SENHA_ADMIN) {
+                localStorage.setItem('adminAutenticado', 'true');
+                document.getElementById('erro-senha').style.display = 'none';
+                mostrarPainel();
+            } else {
+                document.getElementById('erro-senha').style.display = 'block';
+            }
+        });
+
+        // Evento de Enter no campo de senha
+        document.getElementById('senha-admin').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('btn-entrar').click();
+            }
+        });
+
+        // Evento de sair
+        document.getElementById('btn-sair').addEventListener('click', () => {
+            localStorage.removeItem('adminAutenticado');
+            document.getElementById('senha-admin').value = '';
+            mostrarLogin();
+        });
+
+        async function carregarConteudosAdicionados() {
+            try {
+                const response = await fetch('/api/conteudos');
+                const conteudos = await response.json();
+                const container = document.getElementById('conteudos-adicionados');
+                
+                if (conteudos.length === 0) {
+                    container.innerHTML = '<p style="color: var(--text-muted);">Nenhum conteúdo adicionado ainda.</p>';
+                    return;
+                }
+
+                container.innerHTML = conteudos.map(conteudo => `
+                    <div class="conteudo-item">
+                        <div class="conteudo-item-info">
+                            <div class="conteudo-item-nome">${conteudo.nome}</div>
+                            <div class="conteudo-item-categoria">${conteudo.categoria}</div>
+                        </div>
+                        <a href="${conteudo.downloadUrl}" target="_blank">Ver</a>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        document.getElementById('form-conteudo').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const conteudo = {
+                categoria: document.getElementById('categoria').value,
+                nome: document.getElementById('nome').value,
+                descricao: document.getElementById('descricao').value,
+                downloadUrl: document.getElementById('downloadUrl').value,
+                imagem: document.getElementById('imagem').value || 'https://via.placeholder.com/400x200/1a1a25/6b6b80?text=DECRYPT+TEBEX'
+            };
+
+            try {
+                const response = await fetch('/api/conteudos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(conteudo)
+                });
+
+                if (response.ok) {
+                    const sucessoDiv = document.getElementById('mensagem-sucesso');
+                    sucessoDiv.style.display = 'flex';
+                    document.getElementById('form-conteudo').reset();
+                    carregarConteudosAdicionados();
+                    
+                    setTimeout(() => {
+                        sucessoDiv.style.display = 'none';
+                    }, 4000);
+                } else {
+                    alert('Erro ao adicionar conteúdo');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao conectar ao servidor');
+            }
+        });
+
+        // Verificar autenticação ao carregar a página
+        if (verificarAutenticacao()) {
+            mostrarPainel();
+        } else {
+            mostrarLogin();
+        }
+    </script>
+</body>
+</html>

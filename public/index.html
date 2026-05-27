@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DECRYPT TEBEX - Conteúdos FiveM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-inner">
+                <div class="brand">
+                    <span class="brand-accent">DECRYPT</span>
+                    <span class="brand-text">TEBEX</span>
+                </div>
+                <nav class="nav">
+                    <a href="#conteudos" class="nav-link">Conteúdos</a>
+                    <a href="admin.html" class="nav-link admin-link">Admin</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero" id="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <p class="hero-subtitle">Conteúdos FiveM prontos pra usar</p>
+                <h1 class="hero-title">
+                    Recursos, mapas, scripts e mods em um só lugar
+                </h1>
+                <p class="hero-desc">Entre com seu Discord para acessar todos os conteúdos</p>
+                <div class="hero-actions" id="hero-actions">
+                    <button id="btn-login-discord" class="btn btn-discord" onclick="iniciarLoginDiscord()">
+                        <svg class="discord-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                        </svg>
+                        Entrar com Discord
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="hero-glow"></div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 15C15.866 15 19 11.866 19 8C19 4.13401 15.866 1 12 1C8.13401 1 5 4.13401 5 8C5 11.866 8.13401 15 12 15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8.5 23C8.5 19.134 10.015 16 12 16C13.985 16 15.5 19.134 15.5 23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Descriptografia de Recursos</h3>
+                    <p>Arquivos .ydr, .ydd, .yft e mais</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14.7 6.3C15.0866 5.81677 15.3 5.18982 15.3 4.5375C15.3 3.88518 15.0866 3.25823 14.7 2.775C14.3134 2.29177 13.7697 1.97686 13.1625 1.8825C12.5553 1.78814 11.9292 1.92028 11.4 2.2575L6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M14.7 17.7C15.0866 18.1832 15.3 18.8102 15.3 19.4625C15.3 20.1148 15.0866 20.7418 14.7 21.225C14.3134 21.7082 13.7697 22.0231 13.1625 22.1175C12.5553 22.2119 11.9292 22.0797 11.4 21.7425L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M9.3 6.3C8.91344 5.81677 8.7 5.18982 8.7 4.5375C8.7 3.88518 8.91344 3.25823 9.3 2.775C9.68656 2.29177 10.2303 1.97686 10.8375 1.8825C11.4447 1.78814 12.0708 1.92028 12.6 2.2575L18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M9.3 17.7C8.91344 18.1832 8.7 18.8102 8.7 19.4625C8.7 20.1148 8.91344 20.7418 9.3 21.225C9.68656 21.7082 10.2303 22.0231 10.8375 22.1175C11.4447 22.2119 12.0708 22.0797 12.6 21.7425L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Correção de Modelos 3D</h3>
+                    <p>Ajustes e otimizações de performance</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Sistema Rápido e Eficiente</h3>
+                    <p>Entrega via GoFile em segundos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="categories" id="conteudos">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Nossos Conteúdos</h2>
+            </div>
+            <div class="category-filter">
+                <button class="category-btn active" data-categoria="todos">Todos</button>
+                <button class="category-btn" data-categoria="mapas">Mapas</button>
+                <button class="category-btn" data-categoria="scripts">Scripts</button>
+                <button class="category-btn" data-categoria="mods">Mods</button>
+                <button class="category-btn" data-categoria="carros">Carros</button>
+                <button class="category-btn" data-categoria="roupas">Roupas</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="conteudos">
+        <div class="container">
+            <div id="conteudos-grid" class="conteudos-grid"></div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <span class="brand-accent">DECRYPT</span>
+                    <span class="brand-text">TEBEX</span>
+                </div>
+                <p class="footer-copy">© 2026 DECRYPT TEBEX. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
