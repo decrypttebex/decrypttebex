@@ -1,0 +1,6 @@
+[
+ {"name":"Organizador de Resources","slug":"resource-organizer","description":"Analisa e organiza resources autorizadas.","price":39.90,"oldPrice":59.90,"category":{"name":"Organização","slug":"organizacao"}},
+ {"name":"3D Model Fixer","slug":"model-fixer","description":"Valida modelos próprios e gera relatório técnico.","price":49.90,"oldPrice":79.90,"category":{"name":"Modelos 3D","slug":"modelos-3d"}},
+ {"name":"Handling Studio","slug":"handling-studio","description":"Editor visual de handling.meta.","price":24.90,"oldPrice":34.90,"category":{"name":"Veículos","slug":"veiculos"}},
+ {"name":"Otimizador de Imagens","slug":"image-optimizer","description":"Otimiza imagens de projetos autorizados.","price":0,"category":{"name":"Grátis","slug":"gratis"}}
+]

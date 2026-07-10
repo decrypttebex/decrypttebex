@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="BAIANO TOOLS — ferramentas digitais para projetos FiveM próprios e autorizados.">
+  <title>Checkout | BAIANO TOOLS</title>
+  <link rel="icon" href="assets/logo.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div data-header></div>
+  
+<main id="checkoutArea">
+  <section class="page-hero container">
+    <span class="eyebrow">Pagamento</span>
+    <h1>Finalize seu <span class="gradient-text">pedido.</span></h1>
+  </section>
+  <section class="container checkout-layout">
+    <form class="checkout-card" id="checkoutForm">
+      <h2>Dados do cliente</h2>
+      <div class="form-grid">
+        <label class="field"><span>Nome completo</span><input required placeholder="Seu nome"></label>
+        <label class="field"><span>E-mail</span><input required type="email" placeholder="voce@email.com"></label>
+        <label class="field"><span>Discord ID</span><input placeholder="123456789012345678"></label>
+        <label class="field"><span>CPF</span><input placeholder="000.000.000-00"></label>
+      </div>
+      <h2>Forma de pagamento</h2>
+      <input type="hidden" id="paymentMethod" value="pix">
+      <div class="payment-grid">
+        <button type="button" class="payment-card selected" data-payment="pix"><span>◈</span><strong>PIX</strong><small>Confirmação rápida</small></button>
+        <button type="button" class="payment-card" data-payment="card"><span>▣</span><strong>Cartão</strong><small>Mercado Pago</small></button>
+        <button type="button" class="payment-card" data-payment="balance"><span>◉</span><strong>Saldo</strong><small>Coins da conta</small></button>
+      </div>
+      <button class="button primary full large" type="submit">Pagar com Mercado Pago</button>
+    </form>
+    <aside class="summary-card">
+      <h3>Total do pedido</h3>
+      <div class="summary-total"><span>Total</span><strong id="checkoutTotal">R$ 0,00</strong></div>
+      <hr>
+      <p style="color:var(--muted);font-size:13px;line-height:1.6">Pagamento processado pelo Mercado Pago. A liberação ocorre somente após confirmação do servidor.</p>
+    </aside>
+  </section>
+</main>
+
+  <div data-footer></div>
+  <script src="js/config.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>

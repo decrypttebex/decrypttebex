@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="BAIANO TOOLS — ferramentas digitais para projetos FiveM próprios e autorizados.">
+  <title>Catálogo | BAIANO TOOLS</title>
+  <link rel="icon" href="assets/logo.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div data-header></div>
+  
+<main>
+  <section class="page-hero container">
+    <span class="eyebrow">Loja digital</span>
+    <h1>Encontre a ferramenta <span class="gradient-text">ideal.</span></h1>
+    <p>Pesquise, filtre e adicione produtos ao carrinho. Todo o catálogo é controlado pelo arquivo js/products.js.</p>
+  </section>
+  <section class="section" style="padding-top:30px">
+    <div class="container">
+      <div class="catalog-toolbar">
+        <label class="search-box">⌕ <input id="catalogSearch" placeholder="Buscar ferramenta, categoria ou função..."></label>
+        <span class="result-count" id="resultCount"></span>
+      </div>
+      <div class="chips">
+        <button class="chip active" data-category="Todos">Todos</button>
+        <button class="chip" data-category="Organização">Organização</button>
+        <button class="chip" data-category="Modelos 3D">Modelos 3D</button>
+        <button class="chip" data-category="Veículos">Veículos</button>
+        <button class="chip" data-category="Discord">Discord</button>
+        <button class="chip" data-category="Grátis">Grátis</button>
+        <button class="chip" data-category="Pacotes">Pacotes</button>
+      </div>
+      <div class="product-grid" id="catalogGrid"></div>
+    </div>
+  </section>
+</main>
+
+  <div data-footer></div>
+  <script src="js/config.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/catalog.js"></script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+generator client {
+ provider = "prisma-client-js"
+}
+datasource db {
+ provider = "mysql"
+ url = env("DATABASE_URL")
+}
+enum Role {
+ CUSTOMER
+ ADMIN
+}
+enum OrderStatus {
+ PENDING
+ PAID
+ CANCELLED
+ REFUNDED
+}
+enum PaymentStatus {
+ PENDING
+ APPROVED
+ REJECTED
+ CANCELLED
+ REFUNDED
+}
+enum JobStatus {
+ QUEUED
+ PROCESSING
+ COMPLETED
+ FAILED
+}
+enum PlanKind {
+ WEEKLY
+ MONTHLY
+ LIFETIME
+}
+
+model User {
+  id String @id @default(cuid())
+  email String? @unique
+  displayName String
+  avatarUrl String?
+  role Role @default(CUSTOMER)
+  coins Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  discord DiscordAccount?
+  orders Order[]
+  subscriptions Subscription[]
+  jobs ProcessingJob[]
+  downloads Download[]
+  auditLogs AuditLog[]
+}
+model DiscordAccount {
+ id String @id @default(cuid())
+ discordId String @unique
+ username String
+ email String?
+ accessToken String?
+ refreshToken String?
+ userId String @unique
+ user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+}
+model Category {
+ id String @id @default(cuid())
+ name String @unique
+ slug String @unique
+ products Product[]
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+}
+model Product {
+ id String @id @default(cuid())
+ name String
+ slug String @unique
+ description String @db.Text
+ price Decimal @db.Decimal(10,2)
+ oldPrice Decimal? @db.Decimal(10,2)
+ active Boolean @default(true)
+ downloadable Boolean @default(true)
+ filePath String?
+ categoryId String
+ category Category @relation(fields:[categoryId],references:[id])
+ orderItems OrderItem[]
+ downloads Download[]
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+}
+model Order {
+ id String @id @default(cuid())
+ number String @unique
+ status OrderStatus @default(PENDING)
+ subtotal Decimal @db.Decimal(10,2)
+ discount Decimal @default(0) @db.Decimal(10,2)
+ total Decimal @db.Decimal(10,2)
+ userId String
+ user User @relation(fields:[userId],references:[id])
+ couponId String?
+ coupon Coupon? @relation(fields:[couponId],references:[id])
+ items OrderItem[]
+ payments Payment[]
+ downloads Download[]
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+}
+model OrderItem {
+ id String @id @default(cuid())
+ quantity Int
+ unitPrice Decimal @db.Decimal(10,2)
+ total Decimal @db.Decimal(10,2)
+ orderId String
+ order Order @relation(fields:[orderId],references:[id],onDelete:Cascade)
+ productId String
+ product Product @relation(fields:[productId],references:[id])
+}
+model Payment {
+ id String @id @default(cuid())
+ provider String @default("mercadopago")
+ externalId String? @unique
+ idempotencyKey String @unique
+ status PaymentStatus @default(PENDING)
+ amount Decimal @db.Decimal(10,2)
+ raw Json?
+ orderId String
+ order Order @relation(fields:[orderId],references:[id])
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+}
+model Coupon {
+ id String @id @default(cuid())
+ code String @unique
+ percent Int
+ active Boolean @default(true)
+ expiresAt DateTime?
+ maxUses Int?
+ usedCount Int @default(0)
+ orders Order[]
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+}
+model Subscription {
+ id String @id @default(cuid())
+ kind PlanKind
+ status String @default("active")
+ limitTotal Int
+ limitUsed Int @default(0)
+ renewsAt DateTime?
+ userId String
+ user User @relation(fields:[userId],references:[id])
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+}
+model ProcessingJob {
+ id String @id @default(cuid())
+ status JobStatus @default(QUEUED)
+ tool String
+ inputPath String
+ outputPath String?
+ safeLog String? @db.Text
+ attempts Int @default(0)
+ userId String
+ user User @relation(fields:[userId],references:[id])
+ createdAt DateTime @default(now())
+ startedAt DateTime?
+ completedAt DateTime?
+ updatedAt DateTime @updatedAt
+}
+model Download {
+ id String @id @default(cuid())
+ tokenHash String @unique
+ expiresAt DateTime
+ downloadCount Int @default(0)
+ maxDownloads Int @default(5)
+ userId String
+ user User @relation(fields:[userId],references:[id])
+ orderId String?
+ order Order? @relation(fields:[orderId],references:[id])
+ productId String?
+ product Product? @relation(fields:[productId],references:[id])
+ createdAt DateTime @default(now())
+}
+model AuditLog {
+ id String @id @default(cuid())
+ action String
+ entity String
+ entityId String?
+ metadata Json?
+ ip String?
+ userId String?
+ user User? @relation(fields:[userId],references:[id],onDelete:SetNull)
+ createdAt DateTime @default(now())
+ @@index([entity,entityId])
+}
+model SiteSetting {
+ id String @id @default(cuid())
+ key String @unique
+ value Json
+ updatedAt DateTime @updatedAt
+}

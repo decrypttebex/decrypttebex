@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="BAIANO TOOLS — ferramentas digitais para projetos FiveM próprios e autorizados.">
+  <title>Admin | BAIANO TOOLS</title>
+  <link rel="icon" href="assets/logo.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div data-header></div>
+  
+<main>
+  <section class="page-hero container">
+    <span class="eyebrow">Painel administrativo</span>
+    <h1>Controle sua <span class="gradient-text">operação.</span></h1>
+  </section>
+  <section class="container admin-layout">
+    <aside class="account-sidebar">
+      <a class="active" href="#">Visão geral</a>
+      <a href="#">Produtos</a>
+      <a href="#">Pedidos</a>
+      <a href="#">Clientes</a>
+      <a href="#">Cupons</a>
+      <a href="#">Configurações</a>
+    </aside>
+    <div>
+      <div class="metric-grid">
+        <div class="metric"><span>Pedidos</span><strong id="adminOrders">0</strong></div>
+        <div class="metric"><span>Receita aprovada</span><strong id="adminRevenue">R$ 0</strong></div>
+        <div class="metric"><span>Produtos</span><strong id="adminProducts">0</strong></div>
+      </div>
+      <div class="admin-panel">
+        <h2>Pedidos recentes</h2>
+        <div style="overflow:auto">
+          <table class="admin-table">
+            <thead><tr><th>Pedido</th><th>Data</th><th>Total</th><th>Status</th></tr></thead>
+            <tbody id="adminTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+  <div data-footer></div>
+  <script src="js/config.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/site.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

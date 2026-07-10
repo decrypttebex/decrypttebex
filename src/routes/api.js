@@ -1,0 +1,15 @@
+const express=require('express'); const {z}=require('zod'); const prisma=require('../database/prisma'); const wrap=require('../utils/async'); const {requireAuth,requireAdmin}=require('../middleware/auth'); const {createOrder}=require('../services/orders');
+const router=express.Router();
+router.get('/products',wrap(async(req,res)=>{const where={active:true}; if(req.query.q) where.OR=[{name:{contains:String(req.query.q)}},{description:{contains:String(req.query.q)}}]; res.json(await prisma.product.findMany({where,include:{category:true},orderBy:{createdAt:'desc'}}));}));
+router.get('/products/:slug',wrap(async(req,res)=>{const p=await prisma.product.findFirst({where:{slug:req.params.slug,active:true},include:{category:true}}); if(!p)return res.status(404).json({error:'Produto não encontrado'});res.json(p);}));
+const orderSchema=z.object({items:z.array(z.object({productId:z.string(),quantity:z.number().int().min(1).max(20)})).min(1),coupon:z.string().max(40).optional()});
+router.post('/orders',requireAuth,wrap(async(req,res)=>res.status(201).json(await createOrder(req.user.id,orderSchema.parse(req.body)))));
+router.get('/me',requireAuth,(req,res)=>res.json({id:req.user.id,displayName:req.user.displayName,email:req.user.email,avatarUrl:req.user.avatarUrl}));
+router.get('/me/orders',requireAuth,wrap(async(req,res)=>res.json(await prisma.order.findMany({where:{userId:req.user.id},include:{items:{include:{product:true}},payments:true},orderBy:{createdAt:'desc'}}))));
+router.get('/me/downloads',requireAuth,wrap(async(req,res)=>res.json(await prisma.download.findMany({where:{userId:req.user.id,expiresAt:{gt:new Date()}},include:{product:true}}))));
+router.get('/me/jobs',requireAuth,wrap(async(req,res)=>res.json(await prisma.processingJob.findMany({where:{userId:req.user.id},orderBy:{createdAt:'desc'}}))));
+router.get('/admin/stats',requireAdmin,wrap(async(req,res)=>{const [users,orders,products,jobs,revenue]=await Promise.all([prisma.user.count(),prisma.order.count(),prisma.product.count(),prisma.processingJob.count(),prisma.order.aggregate({where:{status:'PAID'},_sum:{total:true}})]);res.json({users,orders,products,jobs,revenue:Number(revenue._sum.total||0)});}));
+router.get('/admin/orders',requireAdmin,wrap(async(req,res)=>{const page=Math.max(1,Number(req.query.page)||1),take=Math.min(100,Math.max(1,Number(req.query.limit)||20));const where=req.query.status?{status:String(req.query.status).toUpperCase()}:{};const [items,total]=await Promise.all([prisma.order.findMany({where,include:{user:true,payments:true},orderBy:{createdAt:'desc'},skip:(page-1)*take,take}),prisma.order.count({where})]);res.json({items,total,page,pages:Math.ceil(total/take)});}));
+router.post('/admin/products',requireAdmin,wrap(async(req,res)=>res.status(201).json(await prisma.product.create({data:req.body}))));
+router.patch('/admin/products/:id',requireAdmin,wrap(async(req,res)=>res.json(await prisma.product.update({where:{id:req.params.id},data:req.body}))));
+module.exports=router;
