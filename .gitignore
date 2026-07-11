@@ -7,3 +7,6 @@ storage/results/*
 !storage/uploads/.gitkeep
 !storage/results/.gitkeep
 *.log
+
+.vercel
+.env*
